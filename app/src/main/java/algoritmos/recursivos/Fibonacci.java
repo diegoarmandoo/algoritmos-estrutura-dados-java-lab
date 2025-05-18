@@ -1,5 +1,7 @@
 package algoritmos.recursivos;
 
+import java.util.Arrays;
+
 public class Fibonacci {
 
     public static int fibonacciRecursivo(int n){
@@ -28,9 +30,24 @@ public class Fibonacci {
         }
     }
 
+    public static int fibonacciRecursivoMemo(int n, int[] memo){
+        if ((n == 0) || (n == 1)){
+            return n;
+        }
+
+        //Verificar se o resultado já esta na tabela de memo
+        if (memo[n] != -1){
+            return memo[n];
+        }
+
+        //Caso recursivo: calcular o número de Fibonacci e armazenar na memória (memo)
+        memo[n] = fibonacciRecursivoMemo(n - 1, memo) + fibonacciRecursivoMemo(n - 2, memo);
+        return memo[n];
+
+    }    
 
     public static void main(String[] args) {
-        int n = 16;
+        int n = 4;
        
         //Medição do tempo para versão recursiva
         long inicioRecursivo = System.nanoTime();
@@ -44,12 +61,24 @@ public class Fibonacci {
         long fimIterativo = System.nanoTime();
         long tempoIterativo = fimIterativo - inicioIterativo;
 
+        //Medição de tempo para versão recursiva com memoização
+        int[] memo = new int[n + 1];
+        Arrays.fill(memo, -1);
+        long inicioRecursivoComMemoria = System.nanoTime();
+        int resultadoRecursivoComMemoria = fibonacciRecursivoMemo(n, memo);
+        long fimRecursivoComMemoria = System.nanoTime();
+        long tempoRecursivoComMemoria = fimRecursivoComMemoria - inicioRecursivoComMemoria;
+
         //Apresentação dos Resultados Medidos
-		System.out.println("Resultado recursivo: " + resultadoRecursivo);
+        System.out.println("Resultado recursivo: " + resultadoRecursivo);
         System.out.println("Tempo recursivo (ns): " + tempoRecursivo);
         System.out.println("Resultado iterativo: " + resultadoIterativo);
         System.out.println("Tempo iterativo (ns): " + tempoIterativo);
-        System.out.println("Diferença (ns): " + (tempoRecursivo - tempoIterativo));
+        System.out.println("Resultado Recursivo com Memoria: " + resultadoRecursivoComMemoria);
+        System.out.println("Tempo Recursivo com Memoria(ns): " + tempoRecursivoComMemoria);
+        System.out.println("Diferença (ns) - tempoRecursivo - tempoIterativo: " + (tempoRecursivo - tempoIterativo));
+        System.out.println("Diferença (ns) - tempoRecursivo - tempoRecursivoComMemoria: " + (tempoRecursivo - tempoRecursivoComMemoria));
+        System.out.println("Diferença (ns)-  tempoIterativo - tempoRecursivoComMemoria: " + (tempoIterativo - tempoRecursivoComMemoria));
     }
 
 }
